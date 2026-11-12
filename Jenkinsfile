@@ -32,7 +32,7 @@ pipeline {
             }
             steps {
                 sh '''
-                    IMAGE_REF=$IMAGE:$VERSION APP_ENV=staging APP_COLOR='#bf8700' PORT=8081 \
+                    IMAGE_REF=$IMAGE:$VERSION APP_ENV=staging APP_COLOR='#bf8700' PORT=8181 \
                         $COMPOSE -p legeni-staging up -d --wait
                 '''
                 sh './deploy/smoke-test.sh legeni-staging $VERSION'
@@ -62,7 +62,7 @@ pipeline {
                     echo "Version en production avant déploiement : ${env.PREVIOUS_IMAGE}"
                     try {
                         sh '''
-                            IMAGE_REF=$IMAGE:$VERSION APP_ENV=prod APP_COLOR='#2da44e' PORT=8082 \
+                            IMAGE_REF=$IMAGE:$VERSION APP_ENV=prod APP_COLOR='#2da44e' PORT=8182 \
                                 $COMPOSE -p legeni-prod up -d --wait
                             ./deploy/smoke-test.sh legeni-prod $VERSION
                         '''
@@ -70,7 +70,7 @@ pipeline {
                         if (env.PREVIOUS_IMAGE != 'none') {
                             echo "Smoke test KO : retour à ${env.PREVIOUS_IMAGE}"
                             sh '''
-                                IMAGE_REF=$PREVIOUS_IMAGE APP_ENV=prod APP_COLOR='#2da44e' PORT=8082 \
+                                IMAGE_REF=$PREVIOUS_IMAGE APP_ENV=prod APP_COLOR='#2da44e' PORT=8182 \
                                     $COMPOSE -p legeni-prod up -d --wait
                             '''
                         }
